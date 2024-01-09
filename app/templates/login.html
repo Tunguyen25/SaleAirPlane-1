@@ -1,0 +1,95 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<!--<header>-->
+<!--    <div class="header-area">-->
+<!--        <div id="sticky-header" class="main-header-area">-->
+<!--            <div class="container-fluid p-0">-->
+<!--                <div class="row align-items-center no-gutters">-->
+<!--                    <div class="col-xl-5 col-lg-6">-->
+<!--                        <div class="main-menu  d-none d-lg-block">-->
+<!--                            <nav>-->
+<!--                                <ul id="navigation">-->
+<!--                                    <li><a class="active" href="index.html">home</a></li>-->
+<!--                                    <li><a href="login.html">Login</a></li>-->
+<!--                                    <li><a href="register.html">Register</a></li>-->
+<!--                                    &lt;!&ndash;<li><a href="#">blog <i class="ti-angle-down"></i></a>-->
+<!--                                        <ul class="submenu">-->
+<!--                                            <li><a href="blog.html">blog</a></li>-->
+<!--                                            <li><a href="single-blog.html">single-blog</a></li>-->
+<!--                                        </ul>-->
+<!--                                    </li>&ndash;&gt;-->
+<!--                                    &lt;!&ndash;<li><a href="#">pages <i class="ti-angle-down"></i></a>-->
+<!--                                        <ul class="submenu">-->
+<!--                                            <li><a href="elements.html">elements</a></li>-->
+<!--                                        </ul>-->
+<!--                                    </li>&ndash;&gt;-->
+<!--                                    <li><a class="lg-text_back" href="contact.html">Contact</a></li>-->
+<!--                                </ul>-->
+<!--                            </nav>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="col-xl-2 col-lg-2">-->
+<!--                        <div class="logo-img" style="color: red;">-->
+<!--                            <a href="index.html">-->
+<!--                                <img src="static/img/logo.png" alt="">-->
+<!--                            </a>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="col-xl-5 col-lg-4 d-none d-lg-block">-->
+<!--                        <div class="book_room">-->
+<!--                            <div class="social_links">-->
+<!--                                <ul>-->
+<!--                                    <li>-->
+<!--                                        <a href="#">-->
+<!--                                            <i class="fa fa-facebook-square"></i>-->
+<!--                                        </a>-->
+<!--                                    </li>-->
+<!--                                    <li>-->
+<!--                                        <a href="#">-->
+<!--                                            <i class="fa fa-twitter"></i>-->
+<!--                                        </a>-->
+<!--                                    </li>-->
+<!--                                    <li>-->
+<!--                                        <a href="#">-->
+<!--                                            <i class="fa fa-instagram"></i>-->
+<!--                                        </a>-->
+<!--                                    </li>-->
+<!--                                </ul>-->
+<!--                            </div>-->
+<!--                            <div class="book_btn d-none d-lg-block">-->
+<!--                                <a class="popup-with-form" href="#test-form">Book A Room</a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="col-12">-->
+<!--                        <div class="mobile_menu d-block d-lg-none"></div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</header>-->
+<div class="slider_area">
+    <div class="form">
+        <div class="slider-form d-flex align-items-center justify-content-center slider_bg_login">
+            <div class="container mt-5 pt-5">
+                <h1 class="text-center text-light mt-1">ĐĂNG NHẬP NGƯỜI DÙNG</h1>
+                <form method="post" action=" ">
+                    <div class="mb-3 mt-3">
+                        <label for="username" class="form-label">Tên đăng nhập:</label>
+                        <input type="text" class="form-control" id="username" name="username"
+                               placeholder="Tên đăng nhập">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pwd" class="form-label">Mật khẩu:</label>
+                        <input type="password" class="form-control" id="pwd" name="password" placeholder="Mật khẩu">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Đăng nhập</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
