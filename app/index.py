@@ -3,23 +3,22 @@ import math
 from flask import render_template, request, redirect, session, jsonify
 import dao
 import utils
-from app import app, login
+from app import app, login, db
 from app.models import flightScheduling, Ticket
 from flask_login import login_user, logout_user, login_required
 
 
 @app.route("/")
 def index():
-
     return render_template('index.html')
 
 
-@app.route('/index.html')
+@app.route('/index')
 def home():
     return render_template('index.html')
 
 
-@app.route('/login.html', methods=['get', 'post'])
+@app.route('/login', methods=['get', 'post'])
 def process_user_login():
     if request.method.__eq__('POST'):
         username = request.form.get('username')
@@ -46,7 +45,7 @@ def process_admin_login():
     return redirect('/admin')
 
 
-@app.route('/register.html', methods=['get', 'post'])
+@app.route('/register', methods=['get', 'post'])
 def register_user():
     err_msg = None
 
@@ -73,22 +72,59 @@ def register_user():
 @app.route('/logout')
 def process_user_logout():
     logout_user()
-    return redirect("/login.html")
+    return redirect("/login")
 
 
-@app.route('/contact.html')
+@app.route('/contact')
 def contact():
     return render_template('contact.html')
 
 
-@app.route('/ticket.html')
+@app.route('/ticket')
 def ticket():
+    data = flightScheduling.query
+    print(data)
+    departure = request.args.get('departure')
+    arrival = request.args.get('arrival')
+
+    flightSchedules = dao.get_flightScheduling(airportfrom=departure, airportto=arrival)
+
+    return render_template('ticket.html', flightSchedules=flightSchedules, data=data)
+
+
+@app.route('/detail_passenger')
+def cart():
+    return render_template('detail_passenger.html')
+
+
+@app.route('/detail_passenger', methods=['get', 'post'])
+def pay_user():
+    err_msg = None
+
+    if request.method.__eq__('POST'):
+        name = request.form.get('name')
+        phone = request.form.get('phone')
+        citizenId = request.form.get('citizenId')
+        try:
+            dao.add_passenger_info(name=request.form.get('name'),
+                                   phone=request.form.get('phone'), citizenId=request.form.get('citizenId'))
+        except Exception as ex:
+            print(str(ex))
+            err_msg = 'Vui lòng nhập đầy đủ thông tin!'
+        else:
+            return redirect('/pay_ticket.html')
+
+    return render_template('/detail_passenger.html', err_msg=err_msg)
+
+
+@app.route('/pay_ticket')
+def pay_ticket():
     data = flightScheduling.query.all()
 
-    kw = request.args.get('kw')
-    flightSchedules = dao.load_flightSchedules(kw)
-
-    return render_template('ticket.html', data=data, flightSchedules=flightSchedules)
+    # name = request.args.get('name')
+    # phone = request.args.get('phone')
+    # citizenId = request.args.get('citizenId')
+    return render_template('pay_ticket.html', data=data)
 
 
 @login.user_loader

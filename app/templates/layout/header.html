@@ -8,7 +8,7 @@
                         <div class="main-menu  d-none d-lg-block">
                             <nav>
                                 <ul id="navigation" onclick="toggleActive()">
-                                    <li><a class="navigation-item active" href="index.html">Home</a></li>
+                                    <li><a class="navigation-item active" href="index">Home</a></li>
                                     {% if current_user.is_authenticated %}
                                     <li class="nav-item">
                                         <a class="nav-link text-info" href="/"> <img src="{{current_user.avatar}}" width="25" class="rounded"/> Chào {{ current_user.username }}!</a>
@@ -17,8 +17,8 @@
                                         <a class="nav-link text-info" href="/logout">Đăng xuất</a>
                                     </li>
                                     {% else %}
-                                    <li><a class="navigation-item" href="login.html">Login</a></li>
-                                    <li><a class="navigation-item" href="register.html">Register</a></li>
+                                    <li><a class="navigation-item" href="login">Login</a></li>
+                                    <li><a class="navigation-item" href="register">Register</a></li>
                                     {% endif %}
                                     <!--<li><a href="#">blog <i class="ti-angle-down"></i></a>
                                         <ul class="submenu">
@@ -31,8 +31,8 @@
                                             <li><a href="elements.html">elements</a></li>
                                         </ul>
                                     </li>-->
-                                    <li><a class="navigation-item" href="contact.html">Contact</a></li>
-                                    <li><a class="navigation-item" href="ticket.html">Ticket</a></li>
+                                    <li><a class="navigation-item" href="contact">Contact</a></li>
+                                    <li><a class="navigation-item" href="ticket">Ticket</a></li>
                                 </ul>
                             </nav>
                         </div>

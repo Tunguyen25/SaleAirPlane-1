@@ -363,10 +363,11 @@ mailChimp();
 //    app.listen(port, () => {
 //        console.log(`Server is running at http://localhost:${port});
 //    });
-    var data = [Apple, Banana]
+
+    var data=['TP.Hồ Chí Minh','Hà Nội','Đà Nẵng','Hải Phòng','Cà Mau']
     <!--Hàm tìm kiếm-->
     function search() {
-        var searchResults = document.getElementById('searchResults');
+        var searchResults = document.getElementById('searchResultsDeparture');
         var searchInput = document.getElementById('departure').value.toLowerCase();
         searchResults.innerHTML = '';
 
@@ -380,9 +381,10 @@ mailChimp();
             return item.toLowerCase().includes(searchInput);
         });
 
-        results.forEach(function(result) {
+        results.forEach(function(result, index) {
             var li = document.createElement('li');
             li.textContent = result;
+            li.setAttribute('value', index+1);
             li.onclick = function() {
                 <!--Xử lý khi kết quả đc chọn-->
                 document.getElementById('departure').value =  result;
@@ -397,6 +399,45 @@ mailChimp();
             <!--Hiện thị danh sách kết quả-->
         searchResults.style.display = 'block';
     }
+
+
+    function search1() {
+        var searchResults = document.getElementById('searchResultsArrival');
+        var searchInput = document.getElementById('arrival').value.toLowerCase();
+        searchResults.innerHTML = '';
+
+//        if (searchInput.length === 0) {
+//            searchResults.style.display = 'none';
+//            return;
+//        }
+
+        <!--Lọc theo kết quả tìm kiếm-->
+        var results = data.filter(function(item) {
+            return item.toLowerCase().includes(searchInput);
+        });
+
+        results.forEach(function(result,index) {
+            var li = document.createElement('li');
+            li.textContent = result;
+            li.onclick = function() {
+                <!--Xử lý khi kết quả đc chọn-->
+                document.getElementById('arrival').value =  result;
+
+                searchResults.style.display = 'none';
+            };
+
+            searchResults.appendChild(li);
+
+        });
+
+            <!--Hiện thị danh sách kết quả-->
+        searchResults.style.display = 'block';
+    }
+
+
+
+
+
 
         /*Active*/
 

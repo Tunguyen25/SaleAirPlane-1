@@ -1,8 +1,9 @@
-from app.models import User, Ticket, flightScheduling, Airport
+from app.models import User, Ticket, flightScheduling, Airport, Flight, Passenger
 from app import app, db
 import hashlib
 import cloudinary.uploader
 from sqlalchemy import or_, func
+from sqlalchemy.orm import aliased
 
 
 def get_user_by_id(id):
@@ -29,16 +30,48 @@ def add_user(name, username, password, avatar):
     db.session.commit()
 
 
-def load_flightSchedules(kw=None):
-    flightSchedules = flightScheduling.query
+def add_passenger_info(name, phone, citizenId):
+    p = Passenger(name=name, phone=phone, citizenId=citizenId)
+    db.session.add(p)
+    db.session.commit()
 
-    if kw:
-        # tickets = flightSchedules.filter(flightScheduling.arrival_airport.has(kw))
-        flightSchedules = flightSchedules.join(flightScheduling.arrival_airport).filter(Airport.name.contains(kw))
+
+def get_airport():
+    return Airport.query.all()
+
+
+def get_flightScheduling(airportfrom,airportto):
+    departure_airport_alias= aliased(Airport)
+    arrival_airport_alias = aliased(Airport)
+
+    flightSchedules = (flightScheduling.query.join(departure_airport_alias, flightScheduling.airportFrom_id == departure_airport_alias.id) \
+        .join(arrival_airport_alias, flightScheduling.airportTo_id == arrival_airport_alias.id).filter(departure_airport_alias.name == airportfrom) or
+                       (arrival_airport_alias.name == airportto))
+
+
+    # for item in flightSchedules:
+    #     if item is None:
+    #         print("Found None object:", item)
+    #
+    #     return item
 
     return flightSchedules.all()
 
 
+def count_flight():
+    return db.session.query(Flight.id, Flight.flight,
+                            func.count(flightScheduling.id)).join(flightScheduling,
+                                                                  flightScheduling.flight_id == Flight.id,
+                                                                  isouter=True).group_by(Flight.id).all()
+
+
+def count_revenue():
+    revenue = db.session.query(Flight.id, Flight.flight, func.sum(Ticket.price * Flight.numFlighted)).join(Flight,
+                                                                                                           Ticket.id == Flight.id)
+
+    return revenue.group_by(Flight.id).all()
+
+
 if __name__ == '__main__':
     with app.app_context():
-        print(load_flightSchedules(kw="Hà Nội"))
+        print(get_flightScheduling(airportfrom='TP.Hồ Chí Minh', airportto='Cà Mau'))

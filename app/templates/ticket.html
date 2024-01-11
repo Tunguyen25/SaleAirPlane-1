@@ -1,5 +1,5 @@
-<!doctype html>
-<html class="no-js" lang="zxx">
+<!DOCTYPE html>
+<html class="no-js" lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -24,14 +24,12 @@
     <link rel="stylesheet" href="static/css/animate.css">
     <link rel="stylesheet" href="static/css/slicknav.css">
     <link rel="stylesheet" href="static/css/style.css">
-    <!-- <link rel="stylesheet" href="css/responsive.css"> -->
+    <!--     <link rel="stylesheet" href="static/css/responsive.css">-->
 </head>
-<style>
-</style>
 
 <body>
 <header>
-    <div class="header-area" style="background-color: black">
+    <div class="header-area">
         <div id="sticky-header" class="main-header-area">
             <div class="container-fluid p-0">
                 <div class="row align-items-center no-gutters">
@@ -39,19 +37,17 @@
                         <div class="main-menu  d-none d-lg-block">
                             <nav>
                                 <ul id="navigation" onclick="toggleActive()">
-                                    <li><a class="navigation-item active" href="index.html">Home</a></li>
+                                    <li><a class="navigation-item active" href="index">Home</a></li>
                                     {% if current_user.is_authenticated %}
                                     <li class="nav-item">
-                                        <a class="nav-link text-info" href="/"> <img src="{{current_user.avatar}}"
-                                                                                     width="25" class="rounded"/> Chào
-                                            {{ current_user.username }}!</a>
+                                        <a class="nav-link text-info" href="/"> <img src="{{current_user.avatar}}" width="25" class="rounded"/> Chào {{ current_user.username }}!</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link text-info" href="/logout">Đăng xuất</a>
                                     </li>
                                     {% else %}
-                                    <li><a class="navigation-item" href="login.html">Login</a></li>
-                                    <li><a class="navigation-item" href="register.html">Register</a></li>
+                                    <li><a class="navigation-item" href="login">Login</a></li>
+                                    <li><a class="navigation-item" href="register">Register</a></li>
                                     {% endif %}
                                     <!--<li><a href="#">blog <i class="ti-angle-down"></i></a>
                                         <ul class="submenu">
@@ -64,8 +60,8 @@
                                             <li><a href="elements.html">elements</a></li>
                                         </ul>
                                     </li>-->
-                                    <li><a class="navigation-item" href="contact.html">Contact</a></li>
-                                    <li><a class="navigation-item" href="ticket.html">Ticket</a></li>
+                                    <li><a class="navigation-item" href="contact">Contact</a></li>
+                                    <li><a class="navigation-item" href="ticket">Ticket</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -98,9 +94,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <!--                            <div class="book_btn d-none d-lg-block">-->
-                            <!--                                <a class="popup-with-form" href="#test-form">Book A Ticket</a>-->
-                            <!--                            </div>-->
+
                         </div>
                     </div>
                     <div class="col-12">
@@ -116,15 +110,16 @@
         <div class="form">
             <div class="slider-form d-flex align-items-center justify-content-center"
                  style="background-image: url(static/img/banner/bannerlogin.webp)">
-                <div class="container-fluid mt-5 pt-5">
+                <div class="container mt-5 pt-5">
                     <h1 class="text-light">Data from MySQL</h1>
-                    <table class="table table-hover text-light table-group-divider">
+                    <table class="table table-hover text-light table-group-divider" style="overflow:hidden">
                         <thead class="table-dark">
                         <tr>
                             <th scope="col">ID</th>
                             <th scope="col">Nơi khởi hành</th>
                             <th scope="col">Nơi đến</th>
                             <th scope="col">Giá chuyến bay</th>
+                            <th scope="col">###</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -132,11 +127,14 @@
                         <tr>
                             <th scope="row">{{ i.id }}</th>
                             {# Sử dụng id hoặc một trường khác của đối tượng i #}
-                            <td style="min-width: 135px;">{{ i.departure_airport.name }}</td>
+                            <td style="min-width: 135px;">{{ i.departure_airport }}</td>
                             {# Truy cập tên của sân bay khởi hành #}
-                            <td style="min-width: 135px;">{{ i.arrival_airport.name }}</td>
+                            <td style="min-width: 135px;">{{ i.arrival_airport }}</td>
                             {# Truy cập tên của sân bay đến #}
                             <td style="min-width: 135px;">{{ "{:,.0f}".format(i.ticket.price) }} VNĐ</td>
+                            <td>
+                                <li class="btn btn-light rounded-pills" value="{{ i.id }}"><a href="detail_passenger">Đặt vé</a></li>
+                            </td>
                         </tr>
                         {% endfor %}
                     </table>
@@ -145,94 +143,4 @@
         </div>
     </div>
 </div>
-
-<footer class="footer">
-    <div class="footer_top">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-3 col-md-6 col-lg-3">
-                    <div class="footer_widget">
-                        <h3 class="footer_title">
-                            address
-                        </h3>
-                        <p class="footer_text"> 200, Green road, Mongla, <br>
-                            New Yor City USA</p>
-                        <a href="#" class="line-button">Get Direction</a>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-6 col-lg-3">
-                    <div class="footer_widget">
-                        <h3 class="footer_title">
-                            Reservation
-                        </h3>
-                        <p class="footer_text">+10 367 267 2678 <br>
-                            reservation@montana.com</p>
-                    </div>
-                </div>
-                <div class="col-xl-2 col-md-6 col-lg-2">
-                    <div class="footer_widget">
-                        <h3 class="footer_title">
-                            Navigation
-                        </h3>
-                        <ul>
-                            <li><a href="#">Home</a></li>
-                            <li><a href="#">Rooms</a></li>
-                            <li><a href="#">About</a></li>
-                            <li><a href="#">News</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-xl-4 col-md-6 col-lg-4">
-                    <div class="footer_widget">
-                        <h3 class="footer_title">
-                            Newsletter
-                        </h3>
-                        <form action="#" class="newsletter_form">
-                            <input type="text" placeholder="Enter your mail">
-                            <button type="submit">Sign Up</button>
-                        </form>
-                        <p class="newsletter_text">Subscribe newsletter to get updates</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="copy-right_text">
-        <div class="container">
-            <div class="footer_border"></div>
-            <div class="row">
-                <div class="col-xl-8 col-md-7 col-lg-9">
-                    <p class="copy_right">
-                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        Copyright &copy;<script>document.write(new Date().getFullYear());</script>
-                        All rights reserved | This template is made with <i class="fa fa-heart-o"
-                                                                            aria-hidden="true"></i> by <a
-                            href="https://colorlib.com" target="_blank">Colorlib</a>
-                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                    </p>
-                </div>
-                <div class="col-xl-4 col-md-5 col-lg-3">
-                    <div class="social_links">
-                        <ul>
-                            <li>
-                                <a href="#">
-                                    <i class="fa fa-facebook-square"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="fa fa-twitter"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <i class="fa fa-instagram"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
+</body>

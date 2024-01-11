@@ -120,6 +120,51 @@
 {% if current_user.is_authenticated %}
 <h1 class="text-center text-dark mt-5 pt-5">CHÀO MỪNG ĐẾN TRANG QUẢN TRỊ!</h1>
 <h2 class="text-center text-dark">Chào {{ current_user.name }}!</h2>
+
+<div class="row">
+  <div class="col-md-5"></div>
+  <div class="col-md-7">
+    <canvas id="myChart"></canvas>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  let data=[];
+  let labels=[];
+
+  {% for s in stats %}
+  data.push({{s[2]}})
+  labels.push('{{s[1]}}')
+  {% endfor %}
+
+  window.onload = function() {
+    const ctx = document.getElementById('myChart');
+
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: '# Số lượng',
+          data: data,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+
+</script>
+
+
+
 {% else %}
 <div class="container-fluid">
     <div class="row main-content bg-success text-center">

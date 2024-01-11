@@ -33,7 +33,7 @@
         <![endif]-->
 
     <!-- header-start -->
-    <header>
+   <header>
     <div class="header-area ">
         <div id="sticky-header" class="main-header-area">
             <div class="container-fluid p-0">
@@ -42,7 +42,7 @@
                         <div class="main-menu  d-none d-lg-block">
                             <nav>
                                 <ul id="navigation" onclick="toggleActive()">
-                                    <li><a class="navigation-item active" href="index.html">Home</a></li>
+                                    <li><a class="navigation-item active" href="index">Home</a></li>
                                     {% if current_user.is_authenticated %}
                                     <li class="nav-item">
                                         <a class="nav-link text-info" href="/"> <img src="{{current_user.avatar}}" width="25" class="rounded"/> Chào {{ current_user.username }}!</a>
@@ -51,8 +51,8 @@
                                         <a class="nav-link text-info" href="/logout">Đăng xuất</a>
                                     </li>
                                     {% else %}
-                                    <li><a class="navigation-item" href="login.html">Login</a></li>
-                                    <li><a class="navigation-item" href="register.html">Register</a></li>
+                                    <li><a class="navigation-item" href="login">Login</a></li>
+                                    <li><a class="navigation-item" href="register">Register</a></li>
                                     {% endif %}
                                     <!--<li><a href="#">blog <i class="ti-angle-down"></i></a>
                                         <ul class="submenu">
@@ -65,8 +65,8 @@
                                             <li><a href="elements.html">elements</a></li>
                                         </ul>
                                     </li>-->
-                                    <li><a class="navigation-item" href="contact.html">Contact</a></li>
-                                    <li><a class="navigation-item" href="ticket.html">Ticket</a></li>
+                                    <li><a class="navigation-item" href="contact">Contact</a></li>
+                                    <li><a class="navigation-item" href="ticket">Ticket</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -99,9 +99,9 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="book_btn d-none d-lg-block">
-                                <a class="popup-with-form" href="#test-form">Book A Ticket</a>
-                            </div>
+<!--                            <div class="book_btn d-none d-lg-block">-->
+<!--                                <a class="popup-with-form" href="#test-form">Book A Ticket</a>-->
+<!--                            </div>-->
                         </div>
                     </div>
                     <div class="col-12">
