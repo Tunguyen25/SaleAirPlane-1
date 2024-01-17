@@ -2,7 +2,7 @@ import enum, datetime
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Enum, DateTime, Boolean, CHAR
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
-from app import db
+from app import db,app
 from datetime import datetime
 from werkzeug.routing import Rule
 
