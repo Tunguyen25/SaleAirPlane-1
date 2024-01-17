@@ -40,7 +40,9 @@
                                     <li><a class="navigation-item active" href="index">Home</a></li>
                                     {% if current_user.is_authenticated %}
                                     <li class="nav-item">
-                                        <a class="nav-link text-info" href="/"> <img src="{{current_user.avatar}}" width="25" class="rounded"/> Chào {{ current_user.username }}!</a>
+                                        <a class="nav-link text-info" href="/"> <img src="{{current_user.avatar}}"
+                                                                                     width="25" class="rounded"/> Chào
+                                            {{ current_user.username }}!</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link text-info" href="/logout">Đăng xuất</a>
@@ -111,14 +113,16 @@
             <div class="slider-form d-flex align-items-center justify-content-center"
                  style="background-image: url(static/img/banner/bannerlogin.webp)">
                 <div class="container mt-5 pt-5">
-                    <h1 class="text-light">Data from MySQL</h1>
-                    <table class="table table-hover text-light table-group-divider" style="overflow:hidden">
+                    <h1 class="text-light">Lịch Chuyến Bay</h1>
+                    <table class="table table-hover text-light table-group-divider">
                         <thead class="table-dark">
                         <tr>
                             <th scope="col">ID</th>
+                            <th scope="col">Ngày, giờ xuất phát</th>
                             <th scope="col">Nơi khởi hành</th>
                             <th scope="col">Nơi đến</th>
                             <th scope="col">Giá chuyến bay</th>
+                            <th scope="col">Trạng thái</th>
                             <th scope="col">###</th>
                         </tr>
                         </thead>
@@ -126,21 +130,89 @@
                         {% for i in data %}
                         <tr>
                             <th scope="row">{{ i.id }}</th>
+                            <td style="min-width: 135px;">{{ i.dateTime }}</td>
                             {# Sử dụng id hoặc một trường khác của đối tượng i #}
                             <td style="min-width: 135px;">{{ i.departure_airport }}</td>
                             {# Truy cập tên của sân bay khởi hành #}
                             <td style="min-width: 135px;">{{ i.arrival_airport }}</td>
                             {# Truy cập tên của sân bay đến #}
                             <td style="min-width: 135px;">{{ "{:,.0f}".format(i.ticket.price) }} VNĐ</td>
-                            <td>
-                                <li class="btn btn-light rounded-pills" value="{{ i.id }}"><a href="detail_passenger">Đặt vé</a></li>
+                            {% if i.ticket.status == True %}
+                            <td style="min-width: 135px;">Còn vé</td>
+                            <td style="min-width: 135px;">
+                                  <li class="btn btn-light rounded-pills" value="{{ i.id }}"
+                                    onclick="addToTicket({{i.id}}, '{{i.departure_airport}}','{{ i.arrival_airport }}',{{i.ticket.price}})">
+                                    <a href="detail_passenger">Đặt vé</a>
+                                </li>
                             </td>
+                            {% else %}
+                            <td style="min-width: 135px;">Hết vé</td>
+                            <td style="min-width: 135px;">
+                                <li class="btn btn-light rounded-pills" value="{{ i.id }}"
+                                    onclick="showSoldOut()">
+                                    <a href="">Đặt vé</a>
+                                </li>
+                            </td>
+
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </table>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+<script src="static/js/vendor/modernizr-3.5.0.min.js"></script>
+<script src="static/js/vendor/jquery-1.12.4.min.js"></script>
+<script src="static/js/popper.min.js"></script>
+<script src="static/js/bootstrap.min.js"></script>
+<script src="static/js/owl.carousel.min.js"></script>
+<script src="static/js/isotope.pkgd.min.js"></script>
+<script src="static/js/ajax-form.js"></script>
+<script src="static/js/waypoints.min.js"></script>
+<script src="static/js/jquery.counterup.min.js"></script>
+<script src="static/js/imagesloaded.pkgd.min.js"></script>
+<script src="static/js/scrollIt.js"></script>
+<script src="static/js/jquery.scrollUp.min.js"></script>
+<script src="static/js/wow.min.js"></script>
+<script src="static/js/nice-select.min.js"></script>
+<script src="static/js/jquery.slicknav.min.js"></script>
+<script src="static/js/jquery.magnific-popup.min.js"></script>
+<script src="static/js/plugins.js"></script>
+<script src="static/js/gijgo.min.js"></script>
+
+<!--contact js-->
+<script src="static/js/contact.js"></script>
+<script src="static/js/jquery.ajaxchimp.min.js"></script>
+<script src="static/js/jquery.form.js"></script>
+<script src="static/js/jquery.validate.min.js"></script>
+<script src="static/js/mail-script.js"></script>
+
+<script src="static/js/main.js"></script>
+<script>
+    $('#datepicker').datepicker({
+        iconsLibrary: 'fontawesome',
+        icons: {
+         rightIcon: '<span class="fa fa-caret-down"></span>'
+     }
+    });
+    $('#datepicker2').datepicker({
+        iconsLibrary: 'fontawesome',
+        icons: {
+         rightIcon: '<span class="fa fa-caret-down"></span>'
+     }
+
+    });
+</script>
+
+<script>
+    function showSoldOut() {
+        alert('Xin lỗi, vé đã hết chỗ!!')
+    }
+</script>
+
 </body>

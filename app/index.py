@@ -1,11 +1,14 @@
 import math
 
-from flask import render_template, request, redirect, session, jsonify
+from flask import render_template, request, redirect, session, jsonify, flash
 import dao
 import utils
-from app import app, login, db
+from app import app, login, db,generate_random_otp,client, verified_number, verify_sid
 from app.models import flightScheduling, Ticket
 from flask_login import login_user, logout_user, login_required
+from datetime import datetime
+from flask_mail import Mail
+from twilio.rest import Client
 
 
 @app.route("/")
@@ -62,7 +65,7 @@ def register_user():
                 print(str(ex))
                 err_msg = 'Vui lòng nhập đầy đủ thông tin!'
             else:
-                return redirect('/login.html')
+                return redirect('/login')
         else:
             err_msg = 'Mật khẩu KHÔNG khớp!'
 
@@ -82,18 +85,75 @@ def contact():
 
 @app.route('/ticket')
 def ticket():
-    data = flightScheduling.query
-    print(data)
     departure = request.args.get('departure')
     arrival = request.args.get('arrival')
+    data = dao.get_flightScheduling(departure, arrival)
 
-    flightSchedules = dao.get_flightScheduling(airportfrom=departure, airportto=arrival)
-
-    return render_template('ticket.html', flightSchedules=flightSchedules, data=data)
+    return render_template('ticket.html', data=data)
 
 
 @app.route('/detail_passenger')
 def cart():
+    return render_template('detail_passenger.html')
+
+
+@app.route('/api/ticket', methods=['post'])
+def add_to_ticket():
+    data = request.json
+    ticket = session.get('ticket')
+    if ticket is None:
+        ticket = {}
+    id = str(data.get("id"))
+    now = datetime.now()
+    formatted_time = now.strftime("%Y-%m-%d %H:%M:%S")
+
+        # ve chua co
+    ticket[id] = {
+            "id": id,
+            # "name":data.get('name'),
+            "departure":data.get('departure'),
+            "arrival":data.get('arrival'),
+            "price": data.get('price'),
+            "booking_time": formatted_time
+    }
+
+    session['ticket'] = ticket
+
+    return jsonify(dao.count_ticket(ticket))
+
+
+@app.route('/api/ticket/<ticket_id>', methods=['delete'])
+def delete_ticket(ticket_id):
+    ticket = session.get('ticket')
+    if ticket and ticket_id in ticket:
+        del ticket[ticket_id]
+
+    session['ticket'] = ticket
+    return jsonify(dao.count_ticket(ticket))
+
+
+@app.route('/send_otp', methods=['POST'])
+def send_otp():
+    if request.method.__eq__('POST'):
+        phone_number = request.form.get('phone')
+        if phone_number:
+            generated_otp = generate_random_otp()
+            phone_number_ = '+84' + phone_number
+
+            # Gửi tin nhắn SMS
+            verification = client.verify.v2.services(verify_sid) \
+                .verifications \
+                .create(to=phone_number_, channel="sms")
+            flash('Mã OTP đã được gửi đến số điện thoại của bạn.')
+
+            # Lưu thông tin vào session
+            session['phone_number'] = phone_number
+            session['generated_otp'] = generated_otp
+
+            return redirect('/detail_passenger')
+        else:
+            flash('Vui lòng nhập số điện thoại.')
+
     return render_template('detail_passenger.html')
 
 
@@ -105,26 +165,33 @@ def pay_user():
         name = request.form.get('name')
         phone = request.form.get('phone')
         citizenId = request.form.get('citizenId')
-        try:
-            dao.add_passenger_info(name=request.form.get('name'),
-                                   phone=request.form.get('phone'), citizenId=request.form.get('citizenId'))
-        except Exception as ex:
-            print(str(ex))
-            err_msg = 'Vui lòng nhập đầy đủ thông tin!'
+        submitted_otp = request.form.get('otp')
+        if not name or not phone or not citizenId or not submitted_otp:
+            err_msg = 'Vui lòng nhập đầy đủ thông tin và mã OTP.'
         else:
-            return redirect('/pay_ticket.html')
+            generated_otp = request.form.get('generated_otp')
+            if submitted_otp == session.get('generated_otp'):
+                try:
+                    dao.add_passenger_info(name=request.form.get('name'),
+                                           phone=request.form.get('phone'), citizenId=request.form.get('citizenId'))
+
+                except Exception as ex:
+                    print(str(ex))
+                    err_msg = 'Vui lòng nhập đầy đủ thông tin!'
+                else:
+                    return redirect('/detail_passenger')
+            else:
+                err_msg = 'Mã OTP không đúng. Vui lòng thử lại.'
 
     return render_template('/detail_passenger.html', err_msg=err_msg)
 
 
-@app.route('/pay_ticket')
-def pay_ticket():
-    data = flightScheduling.query.all()
-
-    # name = request.args.get('name')
-    # phone = request.args.get('phone')
-    # citizenId = request.args.get('citizenId')
-    return render_template('pay_ticket.html', data=data)
+@app.context_processor
+def common_responses():
+    return {
+        'tickets': dao.get_ticket(),
+        'ticket_stats': dao.count_ticket(session.get('ticket'))
+    }
 
 
 @login.user_loader
@@ -134,5 +201,4 @@ def load_user(user_id):
 
 if __name__ == '__main__':
     from app import admin
-
     app.run(debug=True)

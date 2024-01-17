@@ -3,8 +3,9 @@ from flask_admin import Admin, BaseView, expose, AdminIndexView
 from app import app, dao, db
 from flask_login import logout_user, current_user
 from app.models import Ticket, Passenger, Flight, flightScheduling, Airport, AirportSup, UserRoleEnum, Rules
-from flask import redirect
-
+from flask import redirect,request
+from datetime import datetime
+from sqlalchemy import DateTime
 
 class MyAdmin(AdminIndexView):
     @expose('/')
@@ -83,7 +84,11 @@ class MyRulesView(AuthenticatedAdmin):
 class StatsView(AuthenticatedUser):
     @expose("/")
     def index(self):
-        return self.render('admin/stats.html')
+        if request.args.get('month'):
+            month = request.args.get('month', datetime.now())
+        else:
+            month = datetime.now().month
+        return self.render('admin/stats.html', stats_flight=dao.stats_flight(month=month), sum_revenue=dao.sum_revenue(month=month))
 
 
 class LogoutView(AuthenticatedUser):
@@ -95,13 +100,15 @@ class LogoutView(AuthenticatedUser):
 
 admin.add_view(MyRulesView(Rules, db.session))
 admin.add_view(MyAirportView(Airport, db.session))
+admin.add_view(MyFlightSchedulingView(flightScheduling, db.session))
+admin.add_view(MyTicketView(Ticket, db.session))
 admin.add_view(MyAirportSupView(AirportSup, db.session))
 admin.add_view(MyPassengerView(Passenger, db.session))
 
 # Nhân Viên
-admin.add_view(MyStaffView(flightScheduling, db.session))
-admin.add_view(MyStaffTicketView(Ticket, db.session))
+# admin.add_view(MyStaffView(flightScheduling, db.session))
+# admin.add_view(MyStaffTicketView(Ticket, db.session))
 
 
-admin.add_view(StatsView(name='Thông kê báo cáo'))
-admin.add_view(LogoutView(name='Đăng xuất'))
+admin.add_view(StatsView(name='Statics'))
+admin.add_view(LogoutView(name='Logout'))

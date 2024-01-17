@@ -104,6 +104,7 @@ class Ticket(db.Model):
     rule_id = Column(Integer, ForeignKey(Rules.id), nullable=False)
     rule = relationship('Rules', back_populates='tickets')
     status = Column(Boolean, nullable=False)
+    # setTime = Column(DateTime, default=datetime.now())
 
     def __str__(self):
         return f"Ticket(id={self.id}, flight_id={self.flight_id}, rule_id={self.rule_id})"
@@ -152,20 +153,29 @@ if __name__ == '__main__':
     with app.app_context():
         # db.create_all()
 
-        import hashlib
-
-        # u = User(name='Admin', username='admin',
-        #          password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),
+        # import hashlib
+        #
+        # u = User(name='Van A', username='Van A',
+        #          password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()),
+        #          user_role=UserRoleEnum.User)
+        #
+        # u1 = User(name='Van B', username='Van B',
+        #          password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()),
+        #          user_role=UserRoleEnum.User)
+        #
+        # u2 = User(name='Van C', username='Van C',
+        #          password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()),
+        #          user_role=UserRoleEnum.User)
+        #
+        # a = User(name='Admin', username='admin',
+        #          password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()),
         #          user_role=UserRoleEnum.ADMIN)
-        # u1 = User(name='Danh', username='danh',
-        #           password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()),
-        #           user_role=UserRoleEnum.ADMIN)
         #
         # e = User(name='NV1', username='NV1',
-        #           password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()),
-        #           user_role=UserRoleEnum.EMPlOYEE)
+        #          password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()),
+        #          user_role=UserRoleEnum.EMPlOYEE)
         #
-        # db.session.add_all([u, u1, e])
+        # db.session.add_all([u,u1,u2,a,e])
         # db.session.commit()
 
         f = Flight(id='1', flight='Air Asia', revenue='200000000', numFlighted='3')
@@ -180,9 +190,9 @@ if __name__ == '__main__':
         db.session.add_all([p, p1,p2])
         db.session.commit()
 
-        r = Rules(id='1', minimumtime='2003-8-19', totallyairpotsub='3', timestop=None)
-        r1 = Rules(id='2', minimumtime='2013-4-19', totallyairpotsub='2', timestop=None)
-        r2 = Rules(id='3', minimumtime='2024-6-20', totallyairpotsub='1', timestop=None)
+        r = Rules(id='1', minimumtime=None, totallyairpotsub='3', timestop=None)
+        r1 = Rules(id='2', minimumtime=None, totallyairpotsub='2', timestop=None)
+        r2 = Rules(id='3', minimumtime=None, totallyairpotsub='1', timestop=None)
         db.session.add_all([r, r1, r2])
         db.session.commit()
 
@@ -209,36 +219,33 @@ if __name__ == '__main__':
         db.session.add_all([s, s1, s2])
         db.session.commit()
 
-        f = flightScheduling(flight_id='1', airportFrom_id='1', airportTo_id='5', airportSup_id='1',
+        f = flightScheduling(flight_id='1', airportFrom_id='1', airportTo_id='2', airportSup_id='1',
                              dateTime='2024-9-10', flightTime='1 tiếng', numSeat1='5A', numSeat2='9B', ticket_id='1')
-        f1 = flightScheduling(flight_id='2', airportFrom_id='2', airportTo_id='4', airportSup_id='2',
+        f1 = flightScheduling(flight_id='2', airportFrom_id='4', airportTo_id='3', airportSup_id='2',
                               dateTime='2023-10-11', flightTime='2 tiếng', numSeat1='1A', numSeat2='8A', ticket_id='2')
-        f2 = flightScheduling(flight_id='3', airportFrom_id='3', airportTo_id='3', airportSup_id='3',
-                              dateTime='2024-3-10', flightTime='30 phút', numSeat1='2A', numSeat2='7A', ticket_id='3')
+        f2 = flightScheduling(flight_id='3', airportFrom_id='1', airportTo_id='5', airportSup_id='3',
+                              dateTime='2024-1-10', flightTime='30 phút', numSeat1='2A', numSeat2='7A', ticket_id='3')
         f3 = flightScheduling(flight_id='1', airportFrom_id='4', airportTo_id='2', airportSup_id='3',
                               dateTime='2024-8-10', flightTime='3 tiếng', numSeat1='3A', numSeat2='6A', ticket_id='3')
-        f4 = flightScheduling(flight_id='2', airportFrom_id='5', airportTo_id='1', airportSup_id='2',
+        f4 = flightScheduling(flight_id='2', airportFrom_id='1', airportTo_id='3', airportSup_id='2',
                               dateTime='2024-9-20', flightTime='4 tiếng', numSeat1='4A', numSeat2='5A', ticket_id='2')
-        f5 = flightScheduling(flight_id='3', airportFrom_id='1', airportTo_id='5', airportSup_id='1',
-                              dateTime='2024-6-20', flightTime='2 tiếng', numSeat1='5A', numSeat2='4A', ticket_id='1')
-        f6 = flightScheduling(flight_id='2', airportFrom_id='2', airportTo_id='4', airportSup_id='1',
+        f5 = flightScheduling(flight_id='3', airportFrom_id='4', airportTo_id='5', airportSup_id='1',
+                              dateTime='2024-1-20', flightTime='2 tiếng', numSeat1='5A', numSeat2='4A', ticket_id='1')
+        f6 = flightScheduling(flight_id='2', airportFrom_id='1', airportTo_id='2', airportSup_id='1',
                               dateTime='2024-5-13', flightTime='3 tiếng', numSeat1='6A', numSeat2='3A', ticket_id='1')
-        f7 = flightScheduling(flight_id='3', airportFrom_id='3', airportTo_id='5', airportSup_id='3',
+        f7 = flightScheduling(flight_id='3', airportFrom_id='4', airportTo_id='3', airportSup_id='3',
                               dateTime='2024-4-20', flightTime='5 tiếng', numSeat1='7A', numSeat2='2A', ticket_id='2')
-        f8 = flightScheduling(flight_id='1', airportFrom_id='4', airportTo_id='2', airportSup_id='3',
+        f8 = flightScheduling(flight_id='1', airportFrom_id='1', airportTo_id='5', airportSup_id='3',
                               dateTime='2024-6-10', flightTime='3 tiếng', numSeat1='8A', numSeat2='1A', ticket_id='3')
-        f9 = flightScheduling(flight_id='2', airportFrom_id='5', airportTo_id='1', airportSup_id='2',
+        f9 = flightScheduling(flight_id='2', airportFrom_id='4', airportTo_id='2', airportSup_id='2',
                               dateTime='2024-9-5', flightTime='4 tiếng', numSeat1='9A', numSeat2='5A', ticket_id='3')
-        f10 = flightScheduling(flight_id='3', airportFrom_id='3', airportTo_id='1', airportSup_id='1',
-                              dateTime='2024-9-5', flightTime='2 tiếng', numSeat1='10A', numSeat2='6A', ticket_id='2')
-        f11 = flightScheduling(flight_id='1', airportFrom_id='1', airportTo_id='2', airportSup_id='2',
+        f10 = flightScheduling(flight_id='3', airportFrom_id='1', airportTo_id='3', airportSup_id='1',
+                              dateTime='2024-8-5', flightTime='2 tiếng', numSeat1='10A', numSeat2='6A', ticket_id='2')
+        f11 = flightScheduling(flight_id='1', airportFrom_id='4', airportTo_id='5', airportSup_id='2',
                               dateTime='2024-9-5', flightTime='4 tiếng', numSeat1='11A', numSeat2='7A', ticket_id='1')
-        f12 = flightScheduling(flight_id='2', airportFrom_id='5', airportTo_id='3', airportSup_id='3',
-                              dateTime='2024-9-5', flightTime='4 tiếng', numSeat1='12A', numSeat2='8A', ticket_id='3')
-        db.session.add_all([f, f1, f2, f3, f4, f5, f6, f7, f8, f9,f10,f11,f12])
+        db.session.add_all([f, f1, f2, f3, f4, f5, f6, f7, f8, f9,f10,f11])
         db.session.commit()
 
         s = Staff(id='1', name='NV1', phone='09893819031', gioitinh='Nam', employee_role=UserRoleEnum.EMPlOYEE)
-        s1 = Staff(id='2', name='NV2', phone='90183901033', gioitinh='Nữ', employee_role=UserRoleEnum.EMPlOYEE)
-        db.session.add_all([s, s1])
+        db.session.add(s)
         db.session.commit()

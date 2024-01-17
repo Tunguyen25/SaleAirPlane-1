@@ -434,11 +434,6 @@ mailChimp();
         searchResults.style.display = 'block';
     }
 
-
-
-
-
-
         /*Active*/
 
         function toggleActive() {
@@ -449,3 +444,43 @@ mailChimp();
 
             event.target.classList.add('active');
         }
+
+        /*Pay*/
+        function addToTicket(id ,departure,arrival, price) {
+//            var rankSeat = document.querySelector('.rankSeat').value;
+//            if (rankSeat == '1') {
+//                priceSeat = price*1.5
+//            }
+//            else {
+//                priceSeat = price
+//            }
+            fetch('/api/ticket', {
+                method: 'post',
+                body: JSON.stringify({
+                    "id": id,
+                    "departure":departure,
+                    "arrival":arrival,
+//                    "name":departure+ "-"+arrival,
+                    "price": price
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(function(res) {
+                return res.json();
+            });
+}
+
+            function deleteTicket(id, obj) {
+                if (confirm("Bạn chắc chắn xóa?") === true) {
+                    obj.disabled = true;
+                    fetch(`/api/ticket/${id}`, {
+                        method: "delete"
+                    }).then(function(res) {
+                        return res.json();
+                    }).then(function(data) {
+                        let t = document.getElementById(`ticket${id}`);
+                        t.style.display = "none";
+                    });
+                }
+}

@@ -5,53 +5,116 @@
 <div class="slider_area">
     <div class="form">
         <div class="slider-form d-flex align-items-center justify-content-center slider_bg_login">
-            <div class="container mt-5 pt-5">
-                {% if err_msg %}
-                <div class="alert alert-danger">
-                    {{ err_msg }}
+            <div class="container">
+                <div class="row">
+                    <div class="col col-md-4">
+                        {% if err_msg %}
+                        <div class="alert alert-danger">
+                            {{ err_msg }}
+                        </div>
+                        {% endif %}
+                        <h2>Enter your email to receive Phone</h2>
+                        <form action="/send_otp" method="POST">
+                            <label for="number">Phone:</label>
+                            <input type="tel" id="number" name="phone" required pattern="[0-9]{10}">
+                            <br>
+                            <button type="submit">Send OTP</button>
+                        </form>
+                        <h1 class="text-center text-light mt-1">NHẬP THÔNG TIN KHÁCH HÀNG</h1>
+                        <form method="post" class="needs-validation" novalidate action="">
+                            <div class="mb-3 mt-3">
+                                <label for="validationCustom01" class="form-label">Tên người dùng:</label>
+                                <input type="text" class="form-control" id="validationCustom01" name="name"
+                                       placeholder="Tên người dùng">
+                                <div class="valid-feedback">
+                                    Nhập tên người dùng!!
+                                </div>
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <label for="validationCustom02" class="form-label">Số điện thoại:</label>
+                                <input type="text" class="form-control" id="validationCustom02" name="phone"
+                                       placeholder="Phone">
+                                <div class="valid-feedback">
+                                    Nhập số điện thoại!!!
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="validationCustom03" class="form-label">CCCD</label>
+                                <input type="text" class="form-control" id="validationCustom03" name="citizenId"
+                                       placeholder="Căn Cước Công Dân">
+                                <div class="invalid-feedback">
+                                    Nhập công cước công dân!!!
+                                </div>
+                            </div>
+<!--                            <div class="mb-3">-->
+<!--                                <label for="validationCustom03" class="form-label">Email</label>-->
+<!--                                <input type="email" class="form-control" id="validationCustom03" name="email"-->
+<!--                                       placeholder="Email">-->
+<!--                                <div class="invalid-feedback">-->
+<!--                                    Nhập email!!!-->
+<!--                                </div>-->
+<!--                            </div>-->
+                            <div class="mb-3">
+                                <label for="validationCustom03" class="form-label">Mã OTP</label>
+                                <input type="text" class="form-control" id="validationCustom03" name="otp"
+                                       placeholder="Mã otp">
+                                <div class="invalid-feedback">
+                                    Nhập mã OTP!!!
+                                </div>
+                            </div>
+                            {% if current_user.is_authenticated %}
+                            <button type="submit" class="btn btn-primary" onclick="sendOTP()">
+                                <a href="/detail_passenger">Thanh toán</a>
+                            </button>
+                            {% else %}
+                            <p class="text-light">Vui lòng <a class="link-success"
+                                                              href="/login?next=/detail_passenger">đăng nhập</a> để
+                                thanh toán!</p>
+                            {% endif %}
+                        </form>
+                    </div>
+                    <div class="col col-md-8">
+                        <h1 class="text-center text-light">Vé</h1>
+                        {% if 'ticket' in session %}
+                        <table class="table table-hover text-light table-group-divider">
+                            <thead class="table-dark">
+                            <tr>
+                                <th>Mã</th>
+                                <th>Nơi khởi hành</th>
+                                <th>Nơi đến</th>
+                                <th>Giá</th>
+                                <th>Thời gian đặt</th>
+                                <th>###</th>
+                            </tr>
+                            </thead>
+                            {% for c in session['ticket'].values() %}
+                            <tr id="ticket{{c.id}}">
+                                <td>{{ c.id }}</td>
+                                <td>{{ c.departure }}</td>
+                                <td>{{ c.arrival }}</td>
+                                <!--                                <td>{{ c.name }}</td>-->
+                                <!--                                 <td>{{ c.rankTicket }}</td>-->
+                                <td>{{ "{:,.0f}".format(c.price) }} VNĐ</td>
+                                <td>{{ c.booking_time }}</td>
+                                <td>
+                                    <button class="btn btn-danger" onclick="deleteTicket({{ c.id }}, this)">&times;
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                        {% endif %}
+                        <div class="text-light">
+                            <h3 class="text-light">Tổng tiền:
+                                <span>{{ "{:,.0f}".format(ticket_stats.total_price) }} VNĐ</span></h3>
+                        </div>
+                    </div>
                 </div>
-                {% endif %}
-
-                <h1 class="text-center text-light mt-1">NHẬP THÔNG TIN KHÁCH HÀNG</h1>
-                <form method="post" class="needs-validation" novalidate action="">
-                    <div class="mb-3 mt-3">
-                        <label for="validationCustom01" class="form-label">Tên người dùng:</label>
-                        <input type="text" class="form-control" id="validationCustom01" name="name"
-                               placeholder="Tên người dùng">
-                        <div class="valid-feedback">
-                            Nhập tên người dùng!!
-                        </div>
-                    </div>
-                    <div class="mb-3 mt-3">
-                        <label for="validationCustom02" class="form-label">Số điện thoại:</label>
-                        <input type="text" class="form-control" id="validationCustom02" name="phone"
-                               placeholder="Phone">
-                        <div class="valid-feedback">
-                            Nhập số điện thoại!!!
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="validationCustom03" class="form-label">CCCD</label>
-                        <input type="text" class="form-control" id="validationCustom03" name="citizenId"
-                               placeholder="Căn Cước Công Dân">
-                        <div class="invalid-feedback">
-                            Nhập công cước công dân!!!
-                        </div>
-                    </div>
-                    {% if current_user.is_authenticated %}
-                    <button type="submit" class="btn btn-primary">
-                        <a href="/pay_ticket">Xong</a>
-                    </button>
-                    {% else %}
-                    <p class="text-light">Vui lòng <a class="link-success"
-                                                      href="/login?next=/detail_passenger">đăng nhập</a> để
-                        thanh toán!</p>
-                    {% endif %}
-                </form>
             </div>
         </div>
     </div>
 </div>
+
 
 <!--{% if 'cart' in session %}-->
 <!--<table class="table">-->
