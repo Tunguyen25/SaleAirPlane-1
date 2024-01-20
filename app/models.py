@@ -157,15 +157,15 @@ if __name__ == '__main__':
         #
         # u = User(name='Van A', username='Van A',
         #          password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()),
-        #          user_role=UserRoleEnum.User)
+        #          user_role=UserRoleEnum.USER)
         #
         # u1 = User(name='Van B', username='Van B',
         #          password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()),
-        #          user_role=UserRoleEnum.User)
+        #          user_role=UserRoleEnum.USER)
         #
         # u2 = User(name='Van C', username='Van C',
         #          password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()),
-        #          user_role=UserRoleEnum.User)
+        #          user_role=UserRoleEnum.USER)
         #
         # a = User(name='Admin', username='admin',
         #          password=str(hashlib.md5('123'.encode('utf-8')).hexdigest()),
