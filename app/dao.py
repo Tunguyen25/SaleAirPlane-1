@@ -36,8 +36,8 @@ def add_user(name, username, password, avatar):
     db.session.commit()
 
 
-def add_ticket_info(id,price, flight, passenger, status):
-    t = Ticket(id=id,price=price,flight=flight,passenger=passenger,status=status)
+def add_ticket_info(id, price, flight, passenger, status):
+    t = Ticket(id=id, price=price, flight=flight, passenger=passenger, status=status)
     db.session.add(t)
     db.session.commit()
 
@@ -47,19 +47,21 @@ def add_passenger_info(name, phone, citizenId):
     db.session.add(p)
     db.session.commit()
 
-
-# def save_user_after_otp_verification(name, phone, citizenId,email):
+#
+# def save_user_after_otp_verification(name, phone, citizenId, email, submitted_otp):
 #     # Kiểm tra và xác thực mã OTP
-#     submitted_otp = request.form.get('otp')  # Thay thế bằng cách lấy dữ liệu từ form
 #     if verify_otp(submitted_otp, email):
 #         # Nếu mã OTP đúng, thực hiện lưu vào database
 #         p = Passenger(name=name, phone=phone, citizenId=citizenId)
 #
 #         db.session.add(p)
 #         db.session.commit()
+#         flash('Xác thực thành công. Thông tin của bạn đã được lưu.')
+#         return True  # Trả về True để biết rằng xác thực đã thành công
 #     else:
 #         # Xử lý khi mã OTP không đúng
 #         flash('Mã OTP không đúng. Vui lòng thử lại.')
+#         return False  # Trả về False để biết rằng xác thực không thành công
 
 
 def get_airport():
@@ -75,15 +77,15 @@ def get_flightSchedules():
 
 
 def get_flightScheduling(departure, arrival):
-    departure_airport_alias= aliased(Airport)
+    departure_airport_alias = aliased(Airport)
     arrival_airport_alias = aliased(Airport)
     a = flightScheduling.query
-    if  departure and arrival:
+    if departure and arrival:
         a = a.join(departure_airport_alias, flightScheduling.airportFrom_id == departure_airport_alias.id) \
-            .join(arrival_airport_alias, flightScheduling.airportTo_id == arrival_airport_alias.id).filter(departure_airport_alias.name == departure, arrival_airport_alias.name == arrival)
+            .join(arrival_airport_alias, flightScheduling.airportTo_id == arrival_airport_alias.id).filter(
+            departure_airport_alias.name == departure, arrival_airport_alias.name == arrival)
 
-    return  a.all()
-
+    return a.all()
 
 
 def count_flight():
@@ -91,6 +93,7 @@ def count_flight():
                             func.count(flightScheduling.id)).join(flightScheduling,
                                                                   flightScheduling.flight_id == Flight.id,
                                                                   isouter=True).group_by(Flight.id).all()
+
 
 #
 # def count_revenue():
@@ -104,13 +107,13 @@ def stats_flight(month):
         db.session.query(
             Flight.flight,
             func.sum(Flight.numFlighted * Ticket.price).label('total_revenue'),
-            func.count(flightScheduling.id).label('total_flights')#Đếm số lượt bay.
-    # Tính tổng doanh thu.
+            func.count(flightScheduling.id).label('total_flights')  # Đếm số lượt bay.
+            # Tính tổng doanh thu.
         )
         .join(flightScheduling, Flight.id == flightScheduling.flight_id)
         .join(Ticket, Flight.id == Ticket.flight_id)
         .filter(
-            func.extract('month', flightScheduling.dateTime) == month, #Trích xuất tháng từ
+            func.extract('month', flightScheduling.dateTime) == month,  # Trích xuất tháng từ
         )
         .group_by(Flight.id)
         .all()
@@ -143,7 +146,7 @@ def sum_revenue(month):
     tong = 0
     for i in stats_flight(month):
         tong += i.total_revenue
-    return  tong
+    return tong
 
 
 def count_ticket(ticket):
@@ -151,8 +154,7 @@ def count_ticket(ticket):
     if ticket:
         for c in ticket.values():
             total_price += c["price"]
-    return {"total_price":total_price}
-
+    return {"total_price": total_price}
 
 
 if __name__ == '__main__':
