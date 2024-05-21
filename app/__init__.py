@@ -1,3 +1,4 @@
+import mail
 from flask import Flask
 from urllib.parse import quote
 from flask_sqlalchemy import SQLAlchemy
@@ -70,6 +71,6 @@ cloudinary.config(
 )
 if __name__ == '__main__':
     with app.app_context():
-        msg = Message('Test Subject', recipients=['97.lethanhdanh.toky@gmail.com'])
+        msg = Message('Test Subject', recipients=['nguyenbaothaitu9a8@gmail.com'])
         msg.body = 'This is a test email.'
         mail.send(msg)
